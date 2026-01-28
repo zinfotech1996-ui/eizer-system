@@ -33,7 +33,7 @@ function ProtectedRoute({ component: Component, requiredRole }: { component: Rea
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <WouterRouter hook={useHashLocation} base="/eizer-system">
+    <WouterRouter hook={useHashLocation}>
       <Switch>
         <Route path={"/"} component={PublicHome} />
         <Route path={"/about"} component={PublicAbout} />
