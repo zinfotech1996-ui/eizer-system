@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Router as WouterRouter } from "wouter";
+import { useHashLocation } from "wouter/use-hash-location";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { useAuth } from "@/_core/hooks/useAuth";
@@ -32,29 +33,31 @@ function ProtectedRoute({ component: Component, requiredRole }: { component: Rea
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={PublicHome} />
-      <Route path={"/about"} component={PublicAbout} />
-      <Route path={"/how-it-works"} component={PublicHowItWorks} />
-      <Route path={"/support"} component={PublicSupport} />
-      <Route path={"/contact"} component={PublicContact} />
-      <Route path={"/auth"} component={AuthPage} />
-      
-      {/* Admin Routes */}
-      <Route path={"/admin"} component={() => <ProtectedRoute component={AdminDashboard} requiredRole="admin" />} />
-      <Route path={"/admin/fundraisers"} component={() => <ProtectedRoute component={AdminFundraisers} requiredRole="admin" />} />
-      <Route path={"/admin/machines"} component={() => <ProtectedRoute component={AdminMachines} requiredRole="admin" />} />
-      <Route path={"/admin/redemptions"} component={() => <ProtectedRoute component={AdminRedemptions} requiredRole="admin" />} />
-      
-      {/* Fundraiser Routes */}
-      <Route path={"/fundraiser"} component={() => <ProtectedRoute component={FundraiserDashboard} requiredRole="user" />} />
-      <Route path={"/fundraiser/machines"} component={() => <ProtectedRoute component={FundraiserMachines} requiredRole="user" />} />
-      <Route path={"/fundraiser/redemptions"} component={() => <ProtectedRoute component={FundraiserRedemptions} requiredRole="user" />} />
-      
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <WouterRouter hook={useHashLocation} base="/eizer-system">
+      <Switch>
+        <Route path={"/"} component={PublicHome} />
+        <Route path={"/about"} component={PublicAbout} />
+        <Route path={"/how-it-works"} component={PublicHowItWorks} />
+        <Route path={"/support"} component={PublicSupport} />
+        <Route path={"/contact"} component={PublicContact} />
+        <Route path={"/auth"} component={AuthPage} />
+        
+        {/* Admin Routes */}
+        <Route path={"/admin"} component={() => <ProtectedRoute component={AdminDashboard} requiredRole="admin" />} />
+        <Route path={"/admin/fundraisers"} component={() => <ProtectedRoute component={AdminFundraisers} requiredRole="admin" />} />
+        <Route path={"/admin/machines"} component={() => <ProtectedRoute component={AdminMachines} requiredRole="admin" />} />
+        <Route path={"/admin/redemptions"} component={() => <ProtectedRoute component={AdminRedemptions} requiredRole="admin" />} />
+        
+        {/* Fundraiser Routes */}
+        <Route path={"/fundraiser"} component={() => <ProtectedRoute component={FundraiserDashboard} requiredRole="user" />} />
+        <Route path={"/fundraiser/machines"} component={() => <ProtectedRoute component={FundraiserMachines} requiredRole="user" />} />
+        <Route path={"/fundraiser/redemptions"} component={() => <ProtectedRoute component={FundraiserRedemptions} requiredRole="user" />} />
+        
+        <Route path={"/404"} component={NotFound} />
+        {/* Final fallback route */}
+        <Route component={NotFound} />
+      </Switch>
+    </WouterRouter>
   );
 }
 
