@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, fundraisers, creditCardMachines, redemptionRequests, machineLocations, Fundraiser, CreditCardMachine, RedemptionRequest, MachineLocation } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -89,4 +89,113 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Fundraiser queries
+export async function getAllFundraisers() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(fundraisers).orderBy(desc(fundraisers.createdAt));
+}
+
+export async function getFundraiserById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(fundraisers).where(eq(fundraisers.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getFundraiserByUserId(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(fundraisers).where(eq(fundraisers.userId, userId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createFundraiser(data: Omit<typeof fundraisers.$inferInsert, 'createdAt' | 'updatedAt'>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(fundraisers).values(data);
+  return result;
+}
+
+export async function updateFundraiser(id: number, data: Partial<typeof fundraisers.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(fundraisers).set(data).where(eq(fundraisers.id, id));
+}
+
+// Machine Location queries
+export async function getAllMachineLocations() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(machineLocations);
+}
+
+export async function createMachineLocation(data: Omit<typeof machineLocations.$inferInsert, 'createdAt'>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(machineLocations).values(data);
+}
+
+// Credit Card Machine queries
+export async function getAllMachines() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(creditCardMachines).orderBy(desc(creditCardMachines.createdAt));
+}
+
+export async function getMachineById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(creditCardMachines).where(eq(creditCardMachines.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getMachinesByFundraiserId(fundraiserId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(creditCardMachines).where(eq(creditCardMachines.fundraiserId, fundraiserId));
+}
+
+export async function createMachine(data: Omit<typeof creditCardMachines.$inferInsert, 'createdAt' | 'updatedAt'>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(creditCardMachines).values(data);
+}
+
+export async function updateMachine(id: number, data: Partial<typeof creditCardMachines.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(creditCardMachines).set(data).where(eq(creditCardMachines.id, id));
+}
+
+// Redemption Request queries
+export async function getAllRedemptionRequests() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(redemptionRequests).orderBy(desc(redemptionRequests.createdAt));
+}
+
+export async function getRedemptionRequestById(id: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const result = await db.select().from(redemptionRequests).where(eq(redemptionRequests.id, id)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getRedemptionRequestsByFundraiserId(fundraiserId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(redemptionRequests).where(eq(redemptionRequests.fundraiserId, fundraiserId)).orderBy(desc(redemptionRequests.createdAt));
+}
+
+export async function createRedemptionRequest(data: Omit<typeof redemptionRequests.$inferInsert, 'createdAt' | 'updatedAt'>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.insert(redemptionRequests).values(data);
+}
+
+export async function updateRedemptionRequest(id: number, data: Partial<typeof redemptionRequests.$inferInsert>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(redemptionRequests).set(data).where(eq(redemptionRequests.id, id));
+}
