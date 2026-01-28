@@ -17,6 +17,7 @@ import AdminRedemptions from "./pages/AdminRedemptions";
 import FundraiserDashboard from "./pages/FundraiserDashboard";
 import FundraiserMachines from "./pages/FundraiserMachines";
 import FundraiserRedemptions from "./pages/FundraiserRedemptions";
+import AuthPage from "./pages/AuthPage";
 
 function ProtectedRoute({ component: Component, requiredRole }: { component: React.ComponentType; requiredRole?: string }) {
   const { isAuthenticated, user, loading } = useAuth();
@@ -37,6 +38,7 @@ function Router() {
       <Route path={"/how-it-works"} component={PublicHowItWorks} />
       <Route path={"/support"} component={PublicSupport} />
       <Route path={"/contact"} component={PublicContact} />
+      <Route path={"/auth"} component={AuthPage} />
       
       {/* Admin Routes */}
       <Route path={"/admin"} component={() => <ProtectedRoute component={AdminDashboard} requiredRole="admin" />} />

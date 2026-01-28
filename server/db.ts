@@ -1,4 +1,4 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, fundraisers, creditCardMachines, redemptionRequests, machineLocations, Fundraiser, CreditCardMachine, RedemptionRequest, MachineLocation } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -198,4 +198,36 @@ export async function updateRedemptionRequest(id: number, data: Partial<typeof r
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.update(redemptionRequests).set(data).where(eq(redemptionRequests.id, id));
+}
+
+// User authentication queries
+export async function getUserByUsernameOrEmail(usernameOrEmail: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+  const isEmail = usernameOrEmail.includes('@');
+  const result = await db.select().from(users).where(
+    isEmail 
+      ? eq(users.email, usernameOrEmail)
+      : eq(users.username, usernameOrEmail)
+  ).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createUser(data: any) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(users).values({
+    ...data,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  });
+  const inserted = await db.select().from(users).where(eq(users.username, data.username)).limit(1);
+  return inserted.length > 0 ? inserted[0] : null;
+}
+
+export async function updateUserLastSignedIn(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.update(users).set({ lastSignedIn: new Date() }).where(eq(users.id, userId));
 }

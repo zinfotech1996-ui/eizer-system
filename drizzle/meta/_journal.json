@@ -15,6 +15,13 @@
       "when": 1769576710294,
       "tag": "0001_optimal_tag",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1769619146989,
+      "tag": "0002_silly_xavin",
+      "breakpoints": true
     }
   ]
 }
