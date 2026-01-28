@@ -1,7 +1,6 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { ArrowRight, CheckCircle, Zap, Shield, TrendingUp } from "lucide-react";
-import { getLoginUrl } from "@/const";
 import PublicNav from "@/components/PublicNav";
 
 export default function PublicHome() {
@@ -170,12 +169,12 @@ export default function PublicHome() {
           Join Eizer today and streamline your fundraising operations with our modern, secure platform.
         </p>
         {!isAuthenticated && (
-          <a
-            href={getLoginUrl()}
+          <button
+            onClick={() => navigate("/auth")}
             className="inline-block px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
           >
             Get Started Now
-          </a>
+          </button>
         )}
       </section>
 

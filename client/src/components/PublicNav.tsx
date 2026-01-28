@@ -2,7 +2,6 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { getLoginUrl } from "@/const";
 
 export default function PublicNav() {
   const { isAuthenticated, user } = useAuth();
@@ -62,12 +61,12 @@ export default function PublicNav() {
               </button>
             </div>
           ) : (
-            <a
-              href={getLoginUrl()}
+            <button
+              onClick={() => navigate("/auth")}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
             >
               Login
-            </a>
+            </button>
           )}
 
           {/* Mobile Menu Button */}
