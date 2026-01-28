@@ -74,7 +74,7 @@ export default function AdminDashboard() {
                 <div className="p-3 bg-primary/10 rounded-lg">{stat.icon}</div>
               </div>
               <p className="text-muted-foreground text-sm mb-1">{stat.label}</p>
-              <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
             </button>
           ))}
         </div>
